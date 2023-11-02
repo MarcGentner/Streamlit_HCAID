@@ -55,12 +55,14 @@ with st.sidebar:
     
     input_df = user_input_features() 
 
-if input_df.empty:
-    # Display a message to the user informing them that they need to select at least one aspect
-    st.write("Please select at least one aspect in the multiselect dropdown menus.")
+# Check if any of the features are empty
+if input_df.empty or input_df.isnull().values.any():
+    st.warning("Please fill in all the feature selections in the sidebar.")
 else:
-    st.write(input_df)
+    st.write("Features selected by the user:")
+    st.dataframe(input_df)
 
+    
     # Process the input data and make predictions
     # ...
 # # Add columns to the new data frame for the selected values
