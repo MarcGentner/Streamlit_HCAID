@@ -48,11 +48,21 @@ with st.sidebar:
             'set':set,
             'fc':fc,
         }
-        features = pd.DataFrame(data, index=[0])
 
+        features = pd.DataFrame(data)
+       
         return features
+    
     input_df = user_input_features() 
 
+if input_df.empty:
+    # Display a message to the user informing them that they need to select at least one aspect
+    st.write("Please select at least one aspect in the multiselect dropdown menus.")
+else:
+    st.write(input_df)
+
+    # Process the input data and make predictions
+    # ...
 # # Add columns to the new data frame for the selected values
 # new_data["Claimed Improved Aspect of Fitness"] = sci
 # new_data["Sport or exercise type tested"] = set
@@ -62,7 +72,7 @@ with st.sidebar:
 # st.write(new_data)
 
 
-st.write("userinput data: ", data)
+st.write("userinput data: ", input_df)
 
 
 from sklearn.preprocessing import LabelEncoder
@@ -126,30 +136,35 @@ y_pred = model.predict(X_test)
 # Check if user has selected any aspects
 # if sci or set or fc:
     # Filter data based on user's selection
-filtered_data = data[
-    (data['Claimed improved aspect of fitness'].isin(sci)) &
-    (data['sport or exercise type tested'].isin(set)) &
-    (data['fitness category'].isin(fc))
-]
-encoded_data = pd.get_dummies(filtered_data, columns=['Claimed improved aspect of fitness', 'sport or exercise type tested', 'fitness category'])
-X_input = encoded_data.drop(['supplement'], axis=1)
+# filtered_data = data[
+#     (data['Claimed improved aspect of fitness'].isin(sci)) &
+#     (data['sport or exercise type tested'].isin(set)) &
+#     (data['fitness category'].isin(fc))
+# ]
+# encoded_data = pd.get_dummies(filtered_data, columns=['Claimed improved aspect of fitness', 'sport or exercise type tested', 'fitness category'])
+# X_input = encoded_data.drop(['supplement'], axis=1)
 
-y_pred_proba = model.predict_proba(X_input)
+# y_pred_proba = model.predict_proba(X_input)
 
 supplement_names = label_encoder.inverse_transform(model.classes_)
 
 # Create a DataFrame to store the supplements and their prediction probabilities
-supplement_predictions = pd.DataFrame({
-    "Supplement": supplement_names,
-    "Prediction Probability": y_pred_proba[0]
-})
+# supplement_predictions = pd.DataFrame({
+#     "Supplement": supplement_names,
+#     "Prediction Probability": y_pred_proba[0]
+# })
 
 # Sort the DataFrame by prediction probability in descending order
-supplement_predictions = supplement_predictions.sort_values(by="Prediction Probability", ascending=False)
+# supplement_predictions = supplement_predictions.sort_values(by="Prediction Probability", ascending=False)
 
-# Display the top 3 supplements with the highest prediction probabilities
-st.header("Top 3 Predicted Supplements")
-st.table(supplement_predictions.head(3))
+# # Display the top 3 supplements with the highest prediction probabilities
+# st.header("Top 3 Predicted Supplements")
+# st.table(supplement_predictions.head(3))
+
+
+
+
+
 
 
     # # # Clean the data
