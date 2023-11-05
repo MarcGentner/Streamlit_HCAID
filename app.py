@@ -188,59 +188,60 @@ else:
     # st.write(input_df)
     st.subheader("Your prediction")
 
+    if st.button("Predict Supplement"):
+     
+        # Make a prediction using the encoded input data
+        prediction = model.predict(input_df)[0]
 
-    # Make a prediction using the encoded input data
-    prediction = model.predict(input_df)[0]
+        # Get the top 3 supplements
+        top_3_supplements = model.predict_proba(input_df)[0].argsort()[-3:]
+        # Fit the model to the test data
+        y_pred = model.predict(X_test)
 
-    # Get the top 3 supplements
-    top_3_supplements = model.predict_proba(input_df)[0].argsort()[-3:]
-    # Fit the model to the test data
-    y_pred = model.predict(X_test)
+    # Calculate accuracy on the test data
+        accuracy = accuracy_score(y_test, y_pred)
 
-# Calculate accuracy on the test data
-    accuracy = accuracy_score(y_test, y_pred)
+    # Print accuracy
 
-# Print accuracy
-
-# Plot a confusion matrix to visualize the performance of the model
-
-
-    # Show the accuracy of the top 3 supplements predicted
-    st.write('Top 3 supplements and their probabilities:')
-    for supplement in top_3_supplements:
-        predicted_supplement = next(k for k, v in target_mapper.items() if v == supplement)
-        probability = model.predict_proba(input_df)[0][supplement]
-        st.write(f'- {supplement} {predicted_supplement}: {probability:.2f}')
-   
-    st.write(f'Model Accuracy: {accuracy * 100:.2f}%')
+    # Plot a confusion matrix to visualize the performance of the model
 
 
-
-    st.subheader("About this prediction:")
-
-        
-    # Display a classification report
-    report = classification_report(y_test, y_pred)
-    st.text("Classification Report:")
-    st.text(report)
-
-    from sklearn.tree import plot_tree
-    from sklearn.tree import export_text
+        # Show the accuracy of the top 3 supplements predicted
+        st.write('Top 3 supplements and their probabilities:')
+        for supplement in top_3_supplements:
+            predicted_supplement = next(k for k, v in target_mapper.items() if v == supplement)
+            probability = model.predict_proba(input_df)[0][supplement]
+            st.write(f'- {supplement} {predicted_supplement}: {probability:.2f}')
+    
+        st.write(f'Model Accuracy: {accuracy * 100:.2f}%')
 
 
-    # Plot an individual tree from the Random Forest
-    st.subheader("Random Forest Tree Visualization")
-    if st.button("Plot the Tree"):
+
+        st.subheader("About this prediction:")
+
+            
+        # Display a classification report
+        report = classification_report(y_test, y_pred)
+        st.text("Classification Report:")
+        st.text(report)
+
         from sklearn.tree import plot_tree
-        tree_to_plot = model.estimators_[0]  # You can select a different tree if needed
-        plt.figure(figsize=(15, 10))
-        plot_tree(tree_to_plot, feature_names=list(X.columns), filled=True, class_names=[str(i) for i in range(len(target_mapper))])
-        st.pyplot(plt)
-    # predicted_supplement = next(k for k, v in target_mapper.items() if v == prediction)
+        from sklearn.tree import export_text
 
-    # st.write(f'Predicted Supplement: {predicted_supplement}')
 
- 
+        # Plot an individual tree from the Random Forest
+        st.subheader("Random Forest Tree Visualization")
+        if st.button("Plot the Tree"):
+            from sklearn.tree import plot_tree
+            tree_to_plot = model.estimators_[0]  # You can select a different tree if needed
+            plt.figure(figsize=(15, 10))
+            plot_tree(tree_to_plot, feature_names=list(X.columns), filled=True, class_names=[str(i) for i in range(len(target_mapper))])
+            st.pyplot(plt)
+        # predicted_supplement = next(k for k, v in target_mapper.items() if v == prediction)
+
+        # st.write(f'Predicted Supplement: {predicted_supplement}')
+
+    
 
 
 
